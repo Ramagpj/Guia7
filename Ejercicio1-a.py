@@ -17,8 +17,8 @@ limite_inf = -512
 limite_sup = 512
 num_iteraciones = 1000
 
-c1 = 1.5  # Término cognitivo
-c2 = 1.5  # Término socia
+c1 = 1.5  
+c2 = 1.5  
 
 # Inicializar posiciones y velocidades aleatorias dentro del rango dado
 posiciones = np.random.uniform(limite_inf, limite_sup, (num_particulas, dim))
