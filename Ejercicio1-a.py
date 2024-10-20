@@ -9,19 +9,22 @@ inicio = time.time()
 def funcion_objetivo(x):
     return -x * np.sin(np.sqrt(np.abs(x)))
 
-# Parámetros del PSO
-num_particulas = 30
+# Parámetros
+num_particulas = 100
+#Dimension que usamos
 dim = 1
 limite_inf = -512
 limite_sup = 512
-num_iteraciones = 100
+num_iteraciones = 1000
 
 c1 = 1.5  # Término cognitivo
-c2 = 1.5  # Término social
+c2 = 1.5  # Término socia
 
 # Inicializar posiciones y velocidades aleatorias dentro del rango dado
 posiciones = np.random.uniform(limite_inf, limite_sup, (num_particulas, dim))
-velocidades = np.random.uniform(-5, 5, (num_particulas, dim))
+
+#No se entre cuanto y cuanto tiene que ir las velocidades, probe varios valores y siempre andaba. Supongo que inicia en cero
+velocidades = np.random.uniform(0,0, (num_particulas, dim))
 
 # Inicializar las mejores posiciones personales y globales
 mejor_pos_personal = np.copy(posiciones)
@@ -31,14 +34,14 @@ mejor_valor_personal = funcion_objetivo(posiciones)
 mejor_valor_global = np.min(mejor_valor_personal)
 mejor_pos_global = posiciones[np.argmin(mejor_valor_personal)]
 
-# Lista para guardar el mejor valor global en cada iteración
+# Lista para guardar el mejor valor global en cada iteración y hacer el grafico despues
 mejores_valores_globales = []
 
-# Ciclo principal del algoritmo de PSO
+# Ciclo principal del algoritmo de 
 for iteracion in range(num_iteraciones):
     valor_actual = funcion_objetivo(posiciones)
 
-    # Actualizar las mejores posiciones personales y sus valores
+    # Actualizar las mejores posiciones personales y sus valores de cada particula
     for k in range(num_particulas):
         if valor_actual[k] < mejor_valor_personal[k]:  # Minimizar la función objetivo
             mejor_valor_personal[k] = valor_actual[k]  # Actualiza el mejor valor personal
@@ -47,26 +50,28 @@ for iteracion in range(num_iteraciones):
     # Actualizar la mejor posición global si se encuentra un mejor valor
     if np.min(mejor_valor_personal) < mejor_valor_global:
         mejor_valor_global = np.min(mejor_valor_personal)
+        #Use .copy porque a veces no me lo cargaba
         mejor_pos_global = posiciones[np.argmin(mejor_valor_personal)].copy()
        
 
-    # Guardar el mejor valor global de esta iteración
+    # Guardar el mejor valor global de esta iteración para ver como evoluciona con las iteraciones
     mejores_valores_globales.append(mejor_valor_global)
 
-    # Generar coeficientes aleatorios r1 y r2 para cada partícula entre 0 y 1
-    r1 = np.random.rand(num_particulas, dim)  # Término cognitivo
-    r2 = np.random.rand(num_particulas, dim)  # Término social
+    # Generar coeficientes aleatorios r1 y r2 para cada partícula entre 0 y 1. Son los valores aleatorios que te sirve para explorar todo
+    r1 = np.random.rand(num_particulas, dim)  
+    r2 = np.random.rand(num_particulas, dim)  
 
-    # Actualizar las velocidades de cada partícula
-    velocidades = (velocidades +
-                   c1 * r1 * (mejor_pos_personal - posiciones) +
-                   c2 * r2 * (mejor_pos_global - posiciones))
 
-    # Actualizar las posiciones de las partículas
-    posiciones += velocidades
 
-    # Restringir las posiciones dentro de los límites definidos
-    posiciones = np.clip(posiciones, limite_inf, limite_sup)
+    for k in range(num_particulas):
+         # Actualizar el vector de velocidades de cada partícula
+        velocidades[k] = (velocidades[k] +
+                    c1 * r1[k] * (mejor_pos_personal[k] - posiciones[k]) +
+                    c2 * r2[k] * (mejor_pos_global - posiciones[k]))
+        # Actualizar las posiciones de las partículas
+        posiciones[k]+=velocidades[k]
+        # Restringir las posiciones dentro de los límites definidos
+        posiciones[k] = np.clip(posiciones[k], limite_inf, limite_sup)
 
     # Mostrar el progreso cada ciertas iteraciones
     if iteracion % 10 == 0:
