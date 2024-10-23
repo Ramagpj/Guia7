@@ -9,15 +9,15 @@ inicio = time.time()
 def funcion_objetivo(x, y):
     return (x**2 + y**2)**0.25 * np.sin(np.square(np.sqrt(x**2 + y**2)))
 
-# Parámetros
-num_particulas = 100
+# Parámetros -----------ENJAMBRE MEJOR GLOBAL
+num_particulas = 1000
 dim = 2  # Dimensiones (x, y)
 limite_inf = -100
 limite_sup = 100
 num_iteraciones = 1000
-
-c1 = 1.5  
-c2 = 1.5  
+ 
+c1 = 1.5   #Influencia personal
+c2 = 1.5  #Influencia grupo
 
 # Inicializar posiciones y velocidades aleatorias dentro del rango dado
 posiciones = np.random.uniform(limite_inf, limite_sup, (num_particulas, dim))

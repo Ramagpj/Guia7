@@ -13,10 +13,10 @@ n_ciudades = matriz_distancias.shape[0]  # Obtener el número de ciudades desde 
 
 # Parámetros del algoritmo de optimización
 alpha = 1.0  # Parámetro de control: atención a la fermona
-beta =  2.0   # Parámetro de control: atención a la distancia
- 
+beta =  1.5   # Parámetro de control: atención a la distancia
+
 tasa_evaporacion = 0.5  # Tasa de evaporación de feromona
-Q = 1  # Cantidad de feromona máxima a depositar en cada conexión
+Q = 10  # Cantidad de feromona máxima a depositar en cada conexión
 fermonas = np.random.uniform(0, Q, size=(n_ciudades, n_ciudades))  # Inicializar la matriz de feromonas
 
 # Inicializar el array de hormigas, donde están la cantidad de hormigas y la ciudad que visitó
@@ -30,12 +30,11 @@ mejor_recorrido = None  # Variable para almacenar el mejor recorrido encontrado
 mejor_longitud = float('inf')  # Inicializa la mejor longitud como infinito
 
 iteracion = 0  # Contador para las iteraciones del bucle
+max_iteraciones=1000 # Establecer un número máximo de iteraciones 
+condicion=True
 
-# Ciclo para iterar hasta que se alcance un criterio de convergencia
-#max_iteraciones = 100  # Establecer un número máximo de iteraciones
 
-#Hasta que todas las hormigas vayan por el mismo camino o sea el maximo de itearaciones
-while len(np.unique(hormigas, axis=0)) > 1 or iteracion<1 :##and iteracion < max_iteraciones:
+while condicion:
     print(f"Iteración {iteracion + 1}")  # Imprimir el número de la iteración actual
     iteracion += 1  # Incrementar el contador de iteraciones
 
@@ -66,15 +65,11 @@ while len(np.unique(hormigas, axis=0)) > 1 or iteracion<1 :##and iteracion < max
             # Sumar todas las probabilidades de los nodos vecinos
             suma_probabilidades = np.sum(probabilidades[nodos_vecinos])
             
-            # Normalizar las probabilidades
-            if suma_probabilidades > 0:
-                probabilidades[nodos_vecinos] /= suma_probabilidades
-            else:
-                #ni idea esto
-                # Si todas las probabilidades son cero, asignamos una probabilidad uniforme
-                probabilidades[nodos_vecinos] = 1 / len(nodos_vecinos)
             
-            # Seleccionar el próximo nodo basándose en las probabilidades 
+            for l in nodos_vecinos:  # Iterar sobre los nodos vecinos
+                probabilidades[l] /= suma_probabilidades  # Normalizar la probabilidad de cada nodo
+            
+           
             siguiente_ciudad = np.random.choice(nodos_vecinos, p=probabilidades[nodos_vecinos]) 
         
             recorrido.append(siguiente_ciudad)  # Agregar la ciudad seleccionada al recorrido
@@ -112,12 +107,18 @@ while len(np.unique(hormigas, axis=0)) > 1 or iteracion<1 :##and iteracion < max
         for i in range(len(recorrido) - 1):
             ciudad_actual = recorrido[i]
             siguiente_ciudad = recorrido[i + 1]
-            cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / longitud_camino  # Global
+            #cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / longitud_camino  # Global
             #cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q  # Uniforme
-            #cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / matriz_distancias[ciudad_actual, siguiente_ciudad]  # Local
+            cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / matriz_distancias[ciudad_actual, siguiente_ciudad]  # Local
 
     # Actualización de Feromonas
     fermonas += cambio_fermonas  # Actualizar la matriz de feromonas con el depósito acumulado
+   # fermonas = np.clip(fermonas, 0.0001, 10)
+   
+   
+    # Verificar condiciones de salida, es decir hasta que todos los vectores sean todos iguales o sea que todas las hormigas siguen el mismo camino o hasta max iteraciones
+    if (len(np.unique(hormigas, axis=0)) <= 1) or (iteracion >= max_iteraciones):
+        condicion=False
     
     print("Mejor recorrido encontrado:", mejor_recorrido)  # Imprimir el mejor recorrido encontrado
     print("Longitud del mejor recorrido:", mejor_longitud)  # Imprimir la longitud del mejor recorrido

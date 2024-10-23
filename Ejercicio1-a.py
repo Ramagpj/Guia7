@@ -9,16 +9,17 @@ inicio = time.time()
 def funcion_objetivo(x):
     return -x * np.sin(np.sqrt(np.abs(x)))
 
-# Parámetros
-num_particulas = 100
+# Parámetros -----------ENJAMBRE MEJOR GLOBAL
+num_particulas = 1000
 #Dimension que usamos
 dim = 1
+
 limite_inf = -512
 limite_sup = 512
 num_iteraciones = 1000
 
-c1 = 1.5  
-c2 = 1.5  
+c1 = 1.5   #Influencia personal
+c2 = 1.5   #Influencia grupo
 
 # Inicializar posiciones y velocidades aleatorias dentro del rango dado
 posiciones = np.random.uniform(limite_inf, limite_sup, (num_particulas, dim))
@@ -39,6 +40,7 @@ mejores_valores_globales = []
 
 # Ciclo principal del algoritmo de 
 for iteracion in range(num_iteraciones):
+   
     valor_actual = funcion_objetivo(posiciones)
 
     # Actualizar las mejores posiciones personales y sus valores de cada particula
@@ -108,3 +110,4 @@ plt.show()
 # Finalizar el cronómetro y mostrar el tiempo total de ejecución
 fin = time.time()
 print(f"Tiempo total de ejecución: {fin - inicio:.2f} segundos")
+
