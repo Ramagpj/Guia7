@@ -1,4 +1,4 @@
-Numero de particulas o de indiduos = 1000
+Numero de particulas o de individuos = 1000
 Numero de iteraciones o generaciones maximas  = 1000
 
 ----------------------------------------------
@@ -24,9 +24,11 @@ Ambos caen en el minimo global, pero el metodo de enjambre es mucho mas rapido
 Ejercicio 1 - B - Guia 7 (1000 iteraciones - a la 5 ya la tenia y fue cambiando los decimales)
 
 
-Mejor posición global: [99.98903961752606, -100.0 ]
-Mejor valor global: -11.891745300062615
-Tiempo total de ejecución: 14.00 segundos
+Mejor posición global: [-50.74301819166697, -72.3286763881788 ]
+Mejor valor global: 1.0000000000000056
+Tiempo total de ejecución: 14.08 segundos
+
+
 
 Ejercicio 1 - B - Guia 6 (1000 generaciones -  A la 3 ya tenia el valor)
 
@@ -34,7 +36,6 @@ Valor decimal X: 0
 Valor decimal Y: 0
 Fitness: 1.0
 Tiempo total de ejecución: 69.68 segundos
-
 
 En el metodo de enjambre se llega a un minimo global, en cambio en el evolutivo cae en un minimo local segun la inicializacion random,
 ademas es mucho mas lento en comparacion a 1000 iteraciones o generaciones 

@@ -15,12 +15,14 @@ n_ciudades = matriz_distancias.shape[0]  # Obtener el número de ciudades desde 
 alpha = 1.0  # Parámetro de control: atención a la fermona
 beta =  1.5   # Parámetro de control: atención a la distancia
 
-tasa_evaporacion = 0.5  # Tasa de evaporación de feromona
+tasa_evaporacion = 0.5  # Tasa de evaporación de fermona
 Q = 10  # Cantidad de feromona máxima a depositar en cada conexión
 fermonas = np.random.uniform(0, Q, size=(n_ciudades, n_ciudades))  # Inicializar la matriz de feromonas
 
 # Inicializar el array de hormigas, donde están la cantidad de hormigas y la ciudad que visitó
 hormigas = np.full((n_hormigas, n_ciudades), -1)  # Crear un array donde cada hormiga puede visitar todas las ciudades
+longitudes = np.full(n_hormigas,-1)
+
 
 # Inicializar cada hormiga en la ciudad de origen, ciudad 0 o hormiguero
 for k in range(n_hormigas):
@@ -89,6 +91,7 @@ while condicion:
         # Agregar la distancia de regreso al origen
         longitud_camino += matriz_distancias[recorrido[-1], recorrido[0]]  # Sumar la distancia de regreso a la ciudad inicial
         
+        longitudes[k]=longitud_camino
 
         # Comparar y actualizar el mejor recorrido
         if longitud_camino < mejor_longitud:  
@@ -96,7 +99,7 @@ while condicion:
             mejor_recorrido = recorrido.copy()  # Hacer una copia del recorrido para guardar el mejor
 
     # Evaporación de Feromonas
-    fermonas *= (1 - tasa_evaporacion)  # Aplicar la evaporación de feromonas
+    fermonas =fermonas* (1 - tasa_evaporacion)  # Aplicar la evaporación de feromonas
 
     # Inicializar la matriz de cambio de feromonas
     cambio_fermonas = np.zeros((n_ciudades, n_ciudades))  
@@ -104,16 +107,17 @@ while condicion:
     # Depositar feromona en el recorrido de cada hormiga
     for k in range(n_hormigas):
         recorrido = hormigas[k]
+        
         for i in range(len(recorrido) - 1):
             ciudad_actual = recorrido[i]
             siguiente_ciudad = recorrido[i + 1]
-            #cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / longitud_camino  # Global
+            #cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / longitudes[k] # Global
             #cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q  # Uniforme
             cambio_fermonas[ciudad_actual, siguiente_ciudad] += Q / matriz_distancias[ciudad_actual, siguiente_ciudad]  # Local
 
     # Actualización de Feromonas
     fermonas += cambio_fermonas  # Actualizar la matriz de feromonas con el depósito acumulado
-   # fermonas = np.clip(fermonas, 0.0001, 10)
+   
    
    
     # Verificar condiciones de salida, es decir hasta que todos los vectores sean todos iguales o sea que todas las hormigas siguen el mismo camino o hasta max iteraciones

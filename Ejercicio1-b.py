@@ -7,7 +7,7 @@ inicio = time.time()
 
 # Definir la función objetivo
 def funcion_objetivo(x, y):
-    return (x**2 + y**2)**0.25 * np.sin(np.square(np.sqrt(x**2 + y**2)))
+    return (x**2 + y**2)**0.25 * (np.sin(50 * (x**2 + y**2)**0.1)**2) + 1
 
 # Parámetros -----------ENJAMBRE MEJOR GLOBAL
 num_particulas = 1000
@@ -28,6 +28,7 @@ velocidades = np.random.uniform(0,0, (num_particulas, dim))
 # Inicializar las mejores posiciones personales y globales
 mejor_pos_personal = np.copy(posiciones)
 mejor_valor_personal = funcion_objetivo(posiciones[:, 0], posiciones[:, 1])
+
 
 # Inicializar el mejor valor global
 mejor_valor_global = np.min(mejor_valor_personal)

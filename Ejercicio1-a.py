@@ -14,6 +14,7 @@ num_particulas = 1000
 #Dimension que usamos
 dim = 1
 
+
 limite_inf = -512
 limite_sup = 512
 num_iteraciones = 1000
