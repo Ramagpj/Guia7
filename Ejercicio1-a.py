@@ -39,9 +39,13 @@ mejor_pos_global = posiciones[np.argmin(mejor_valor_personal)]
 # Lista para guardar el mejor valor global en cada iteración y hacer el grafico despues
 mejores_valores_globales = []
 
-# Ciclo principal del algoritmo de 
-for iteracion in range(num_iteraciones):
-   
+
+condicion = True
+iteracion=0
+# Ciclo principal del algoritmo
+while iteracion < num_iteraciones and condicion:
+    iteracion=iteracion +1
+    #Vectorial
     valor_actual = funcion_objetivo(posiciones)
 
     # Actualizar las mejores posiciones personales y sus valores de cada particula
@@ -54,6 +58,7 @@ for iteracion in range(num_iteraciones):
     if np.min(mejor_valor_personal) < mejor_valor_global:
         mejor_valor_global = np.min(mejor_valor_personal)
         #Use .copy porque a veces no me lo cargaba
+        #np.argmin te da el indice del minimo
         mejor_pos_global = posiciones[np.argmin(mejor_valor_personal)].copy()
        
 
@@ -63,8 +68,6 @@ for iteracion in range(num_iteraciones):
     # Generar coeficientes aleatorios r1 y r2 para cada partícula entre 0 y 1. Son los valores aleatorios que te sirve para explorar todo
     r1 = np.random.rand(num_particulas, dim)  
     r2 = np.random.rand(num_particulas, dim)  
-
-
 
     for k in range(num_particulas):
          # Actualizar el vector de velocidades de cada partícula
@@ -79,6 +82,13 @@ for iteracion in range(num_iteraciones):
     # Mostrar el progreso cada ciertas iteraciones
     if iteracion % 10 == 0:
         print(f"Iteración {iteracion}: Mejor valor global = {mejor_valor_global}")
+        indiceMenos10 = iteracion
+
+        if iteracion >= 10:
+            if mejores_valores_globales[iteracion-1] == mejores_valores_globales[iteracion-10]:
+                condicion = False
+        
+  
         
  
 
@@ -87,12 +97,13 @@ print(f"Mejor posición global: {mejor_pos_global}")
 print(f"Mejor valor global: {mejor_valor_global}")
 
 # Generar un gráfico del mejor valor global a lo largo de las iteraciones
-plt.figure()
+plt.figure("1")
 plt.plot(mejores_valores_globales)
 plt.title("Mejor valor global a lo largo de las iteraciones")
 plt.xlabel("Iteraciones")
 plt.ylabel("Mejor valor global")
 plt.grid()
+plt.ylim([-500,-400])  
 plt.show()
 
 # Genera un rango de valores de -512 a 512 para graficar la función objetivo

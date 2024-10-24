@@ -32,14 +32,19 @@ mejor_valor_personal = funcion_objetivo(posiciones[:, 0], posiciones[:, 1])
 
 # Inicializar el mejor valor global
 mejor_valor_global = np.min(mejor_valor_personal)
+
                     #Obtener el indice del mejor_valor_global, y con eso tenes que posicion es
 mejor_pos_global = posiciones[np.argmin(mejor_valor_personal)].copy()  
 
 # Lista para guardar el mejor valor global en cada iteración
 mejores_valores_globales = []
 
-# Ciclo principal del algoritmo de PSO
-for iteracion in range(num_iteraciones):
+# Ciclo principal del algoritmo
+condicion=True
+iteracion=0
+while iteracion < num_iteraciones and condicion:
+    iteracion=iteracion+1
+    #Vectorial
     valor_actual = funcion_objetivo(posiciones[:, 0], posiciones[:, 1])
 
     # Actualizar las mejores posiciones personales y sus valores
@@ -52,6 +57,7 @@ for iteracion in range(num_iteraciones):
     minimo_particulas=np.min(mejor_valor_personal)
     if minimo_particulas < mejor_valor_global:
         mejor_valor_global = minimo_particulas
+        #np.argmin te da el indice del minimo
         mejor_pos_global = posiciones[np.argmin(mejor_valor_personal)].copy()  # Asegurarse de que se haga una copia
 
     # Guardar el mejor valor global de esta iteración
@@ -72,10 +78,19 @@ for iteracion in range(num_iteraciones):
         posiciones[k]+=velocidades[k]
         # Restringir las posiciones dentro de los límites definidos
         posiciones[k] = np.clip(posiciones[k], limite_inf, limite_sup)
+        
+        
     # Mostrar el progreso cada ciertas iteraciones
     if iteracion % 10 == 0:
-        print(f"Iteración {iteracion}: Mejor valor global = {mejor_valor_global}, Mejor posición global = [{mejor_pos_global[0]}, {mejor_pos_global[1]} ] ")
-
+        print(f"Iteración {iteracion}: Mejor valor global = {mejor_valor_global}")
+        indiceMenos10 = iteracion
+     
+        if iteracion >= 10:
+            if mejores_valores_globales[iteracion-1] == mejores_valores_globales[iteracion-10]:
+                condicion = False
+                
+                
+                
 # Al final, imprimir la mejor partícula encontrada y el valor de la función objetivo
 print(f"Mejor posición global: [{mejor_pos_global[0]}, {mejor_pos_global[1]} ]")
 print(f"Mejor valor global: {mejor_valor_global}")
@@ -86,6 +101,7 @@ plt.plot(mejores_valores_globales)
 plt.title("Mejor valor global a lo largo de las iteraciones")
 plt.xlabel("Iteraciones")
 plt.ylabel("Mejor valor global")
+plt.ylim([0, 5])  
 plt.grid()
 plt.show()
 

@@ -4,6 +4,7 @@ import numpy as np
 def cargar_matriz_distancias(archivo):
     return np.loadtxt(archivo, delimiter=',', dtype=int)
 
+
 # Parámetros del problema
 n_hormigas = 100  # Número de hormigas
 archivo_distancias = 'gr17.csv' 
@@ -24,9 +25,9 @@ hormigas = np.full((n_hormigas, n_ciudades), -1)  # Crear un array donde cada ho
 longitudes = np.full(n_hormigas,-1)
 
 
-# Inicializar cada hormiga en la ciudad de origen, ciudad 0 o hormiguero
-for k in range(n_hormigas):
-    hormigas[k, 0] = 0  # Todas las hormigas comienzan en la ciudad 0
+# # Inicializar cada hormiga en la ciudad de origen, ciudad 0 o hormiguero
+# for k in range(n_hormigas):
+#     hormigas[k, 0] = 0  # Todas las hormigas comienzan en la ciudad 0
 
 mejor_recorrido = None  # Variable para almacenar el mejor recorrido encontrado
 mejor_longitud = float('inf')  # Inicializa la mejor longitud como infinito
@@ -49,7 +50,7 @@ while condicion:
         # Repetir hasta que todas las ciudades hayan sido visitadas
         while len(recorrido) < n_ciudades:
             # Calcular las probabilidades para las ciudades vecinas
-            probabilidades = np.zeros(n_ciudades)  # Array para almacenar las probabilidades
+            probabilidades = np.zeros(n_ciudades)  # Vector para almacenar las probabilidades
 
             # Identificar los nodos vecinos (ciudades no visitadas)
            # Inicializar una lista vacía para los nodos vecinos
@@ -59,7 +60,7 @@ while condicion:
                 if i not in recorrido:  # Si la ciudad no fue visitada, se agrega a nodos_vecinos
                     nodos_vecinos.append(i)
             
-            # Calcular las probabilidades para moverse a las ciudades vecinas
+            #J me da el valor de la ciudad, y se calcula las probabilidades para moverse a las ciudades vecinas
             for j in nodos_vecinos:
                 probabilidad_ij = (fermonas[ciudad_actual, j] ** alpha) * ((1 / matriz_distancias[ciudad_actual, j]) ** beta)
                 probabilidades[j] = probabilidad_ij
@@ -67,7 +68,7 @@ while condicion:
             # Sumar todas las probabilidades de los nodos vecinos
             suma_probabilidades = np.sum(probabilidades[nodos_vecinos])
             
-            
+            # L = me da el valor de la ciudad
             for l in nodos_vecinos:  # Iterar sobre los nodos vecinos
                 probabilidades[l] /= suma_probabilidades  # Normalizar la probabilidad de cada nodo
             
